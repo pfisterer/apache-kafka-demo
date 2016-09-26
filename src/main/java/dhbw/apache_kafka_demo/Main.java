@@ -8,6 +8,7 @@ import org.kohsuke.args4j.Option;
 
 import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.Service;
+import com.google.common.util.concurrent.Service.State;
 import com.google.common.util.concurrent.ServiceManager;
 
 import de.uniluebeck.itm.util.logging.Logging;
@@ -30,6 +31,16 @@ public class Main {
 		ServiceManager serviceManager = new ServiceManager(services);
 		serviceManager.startAsync().awaitHealthy();
 
+		// Wait for the producer to finish
+		if (serviceManager.servicesByState()
+				.get(State.TERMINATED)
+				.stream()
+				.filter(service -> (service instanceof ProducerTest))
+				.count() > 0) {
+			serviceManager.stopAsync();
+		}
+
+		// Wait until all services are stopped
 		serviceManager.awaitStopped();
 	}
 
