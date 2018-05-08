@@ -38,6 +38,7 @@ public class Main {
 
 		// Wait until all services are stopped
 		serviceManager.awaitStopped();
+		System.exit(0);
 	}
 
 	public static class CommandLineOptions {
