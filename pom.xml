@@ -20,14 +20,7 @@
 		<dependency>
 			<groupId>org.apache.kafka</groupId>
 			<artifactId>kafka_2.11</artifactId>
-			<version>0.10.1.0</version>
-		</dependency>
-
-		<!-- Logging -->
-		<dependency>
-			<groupId>de.uniluebeck.itm.util</groupId>
-			<artifactId>logging</artifactId>
-			<version>0.5</version>
+			<version>0.10.0.1</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/com.google.guava/guava -->

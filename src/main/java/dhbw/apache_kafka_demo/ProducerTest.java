@@ -1,6 +1,7 @@
 package dhbw.apache_kafka_demo;
 
 import java.util.Properties;
+import java.util.Random;
 import java.util.Set;
 import java.util.stream.IntStream;
 
@@ -24,7 +25,7 @@ public class ProducerTest extends AbstractExecutionThreadService {
 	public ProducerTest(String kafkaBootstrapServer, String topic) {
 		Properties props = new Properties();
 		props.put("bootstrap.servers", kafkaBootstrapServer);
-		props.put("group.id", "bla");
+		props.put("group.id", "bla" + new Random().nextInt());
 		props.put("client.id", this.getClass().getSimpleName());
 		props.put("key.serializer", StringSerializer.class.getName());
 		props.put("value.serializer", StringSerializer.class.getName());
@@ -49,8 +50,8 @@ public class ProducerTest extends AbstractExecutionThreadService {
 
 						// Display some data about the message transmission
 						if (metadata != null) {
-							log.info("Sent message(" + messageNo + ", " + messageStr + ") sent to partition(" + metadata.partition()
-									+ "), " + "offset(" + metadata.offset() + ")");
+							log.info("Sent message(" + messageNo + ", " + messageStr + ") sent to partition(" + metadata.partition() + "), "
+									+ "offset(" + metadata.offset() + ")");
 						} else {
 							exception.printStackTrace();
 						}

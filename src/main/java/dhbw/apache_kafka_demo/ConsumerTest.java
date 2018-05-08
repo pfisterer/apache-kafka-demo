@@ -43,19 +43,27 @@ public class ConsumerTest extends AbstractExecutionThreadService {
 	public void run() {
 		log.info("Starting");
 
+		// Connect to Kafka
 		ConsumerConnector connector = Consumer.createJavaConsumerConnector(config);
+
+		// Get a list of streams for (potentially) multiple topics
 		Map<String, List<KafkaStream<byte[], byte[]>>> messageStreams = connector.createMessageStreams(ImmutableMap.of(topicName, 1));
+
+		// Obtain the stream for the topic we are interested in
 		List<KafkaStream<byte[], byte[]>> streams = messageStreams.get(topicName);
+
+		// Create threads for each stream to process incoming messages
 		ExecutorService executor = Executors.newFixedThreadPool(streams.size());
 
+		// For each stream submit a handler thread
 		for (KafkaStream<byte[], byte[]> stream : streams) {
-			executor.submit(new Runnable() {
-				public void run() {
-					ConsumerIterator<byte[], byte[]> iterator = stream.iterator();
-					while (iterator.hasNext()) {
-						MessageAndMetadata<byte[], byte[]> messageAndMetadata = iterator.next();
-						log.info("Received: {}", new String(messageAndMetadata.message()));
-					}
+			executor.submit(() -> {
+				// Obtain an iterator from the stream
+				ConsumerIterator<byte[], byte[]> iterator = stream.iterator();
+				// Read all messages
+				while (iterator.hasNext()) {
+					MessageAndMetadata<byte[], byte[]> messageAndMetadata = iterator.next();
+					log.info("Received: {}", new String(messageAndMetadata.message()));
 				}
 			});
 		}

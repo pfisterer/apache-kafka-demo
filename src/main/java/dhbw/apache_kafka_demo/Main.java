@@ -11,14 +11,9 @@ import com.google.common.util.concurrent.Service;
 import com.google.common.util.concurrent.Service.State;
 import com.google.common.util.concurrent.ServiceManager;
 
-import de.uniluebeck.itm.util.logging.Logging;
-
 public class Main {
 
 	public static void main(String[] args) throws Exception {
-		// Initialize logging
-		Logging.setLoggingDefaults();
-
 		// Parse command line options
 		CommandLineOptions options = CommandLineOptions.parseCmdLineOptions(args);
 
@@ -32,7 +27,8 @@ public class Main {
 		serviceManager.startAsync().awaitHealthy();
 
 		// Wait for the producer to finish
-		if (serviceManager.servicesByState()
+		if (serviceManager
+				.servicesByState()
 				.get(State.TERMINATED)
 				.stream()
 				.filter(service -> (service instanceof ProducerTest))
@@ -45,17 +41,17 @@ public class Main {
 	}
 
 	public static class CommandLineOptions {
+		@Option(name = "-zookeeper", usage = "Zookeeper address (e.g., localhost:2181)", required = false)
+		public String zookeeper = "localhost:2181";
 
-		@Option(name = "-zookeeper", usage = "Zookeeper address (e.g., 127.0.0.1:1000)", required = true)
-		public String zookeeper = null;
+		@Option(name = "-kafka", usage = "Kafka broker address (e.g., localhost:9092)", required = false)
+		public String kafka = "localhost:9092";
 
-		@Option(name = "-kafka", usage = "Kafka broker address (e.g., 127.0.0.1:1001)", required = true)
-		public String kafka = null;
+		@Option(name = "-topic", usage = "Topic to use", required = false)
+		public String topic = "test1";
 
-		@Option(name = "-topic", usage = "Topic to use", required = true)
-		public String topic = null;
-
-		@Option(name = "-v", aliases = { "--verbose" }, usage = "Verbose (DEBUG) logging output (default: INFO).", required = false)
+		@Option(name = "-v", aliases = {
+				"--verbose" }, usage = "Verbose (DEBUG) logging output (default: INFO).", required = false)
 		public boolean verbose = false;
 
 		@Option(name = "-h", aliases = { "--help" }, usage = "This help message.", required = false)
