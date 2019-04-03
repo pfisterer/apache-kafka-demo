@@ -3,6 +3,7 @@ package dhbw.apache_kafka_demo;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -30,7 +31,7 @@ public class ConsumerTest extends AbstractExecutionThreadService {
 		Properties props = new Properties();
 		props.put("bootstrap.servers", server);
 		props.put("zookeeper.connect", server);
-		props.put("group.id", "bla");
+		props.put("group.id", "bla" + new Random().nextInt());
 		props.put("client.id", this.getClass().getSimpleName());
 		props.put("key.deserializer", StringDeserializer.class.getName());
 		props.put("value.deserializer", StringDeserializer.class.getName());
@@ -47,7 +48,8 @@ public class ConsumerTest extends AbstractExecutionThreadService {
 		ConsumerConnector connector = Consumer.createJavaConsumerConnector(config);
 
 		// Get a list of streams for (potentially) multiple topics
-		Map<String, List<KafkaStream<byte[], byte[]>>> messageStreams = connector.createMessageStreams(ImmutableMap.of(topicName, 1));
+		Map<String, List<KafkaStream<byte[], byte[]>>> messageStreams 
+			= connector.createMessageStreams(ImmutableMap.of(topicName, 1));
 
 		// Obtain the stream for the topic we are interested in
 		List<KafkaStream<byte[], byte[]>> streams = messageStreams.get(topicName);

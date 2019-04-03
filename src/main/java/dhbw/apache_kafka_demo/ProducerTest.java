@@ -45,7 +45,7 @@ public class ProducerTest extends AbstractExecutionThreadService {
 			String messageStr = "Message_" + messageNo;
 
 			// Send the message
-			producer.send(new ProducerRecord<String, String>(topic, "" + messageNo, messageStr),
+			producer.send(new ProducerRecord<String, String>(topic, "user_id_1", messageStr),
 					(RecordMetadata metadata, Exception exception) -> {
 
 						// Display some data about the message transmission

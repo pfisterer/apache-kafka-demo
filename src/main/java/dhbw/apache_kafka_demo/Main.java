@@ -49,7 +49,7 @@ public class Main {
 		public String kafka = "localhost:9092";
 
 		@Option(name = "-topic", usage = "Topic to use", required = false)
-		public String topic = "test1";
+		public String topic = "test";
 
 		@Option(name = "-v", aliases = {
 				"--verbose" }, usage = "Verbose (DEBUG) logging output (default: INFO).", required = false)
